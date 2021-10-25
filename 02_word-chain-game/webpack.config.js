@@ -1,36 +1,47 @@
-const path = require('path');
+const path = require("path");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = {
-    name: 'wordrelay-setting', // 웹팩 설정 이름
-    mode: 'development', // 실서비스에서는 : production
-    devtool: 'eval', // 빠르게
+    name: "wordrelay-setting",
+    mode: "development",
+    devtool: "inline-source-map",
     resolve: {
-        extensions: ['.js', '.jsx'] // 이렇게 작성해주면 알아서 client.js 나 client.jsx가 있는지 알아서 확인한다.
+        extensions: [".js", ".jsx"],
     },
-
-    // 입력
     entry: {
-        app: ['./client'], // resolve를 작성해줌으로서 확장자를 안 적어줘도 된다.
+        app: "./client",
     },
-    
-    // 엔트리에 파일을 읽고 모듈을 적용해서 아웃풋으로 뺀다
     module: {
         rules: [
             {
-                test: /\.jsx?/, // js랑 jsx 파일에 룰을 적용하겠다.
-                loader: 'babel-loader', //js랑 jsx 파일에 바벨 룰을 적용하겠다.
-                options: { // 바벨 옵션
-                    presets: ['@babel/preset-env', '@babel/preset-react'],
-                    plugins: ['@babel/plugin-proposal-class-properties']
+                test: /\.jsx?$/,
+                loader: "babel-loader",
+                options: {
+                    presets: [
+                        [
+                            "@babel/preset-env",
+                            {
+                                targets: { browsers: ["last 2 chrome versions"] },
+                                debug: true,
+                            },
+                        ],
+                        "@babel/preset-react",
+                    ],
+                    plugins: ["react-refresh/babel"],
                 },
+                exclude: path.join(__dirname, "node_modules"),
             },
         ],
     },
-
-    // 출력
+    plugins: [new ReactRefreshWebpackPlugin()],
     output: {
-        path: path.join(__dirname, 'dist'), // 현재 폴더 경로 안에 들어 있는 dist 폴더 경로를 간편하게 표기
-        filename: 'app.js',
-    }
-
+        path: path.join(__dirname, "dist"), // 실제의 경로
+        filename: "[name].js",
+        publicPath: "/dist", // 웹펙 데브서버가 사용하는 경과물간의  상대 경로 app.use('/dist', express.static(__dirname, 'dist'))
+    },
+    devServer: {
+        devMiddleware: { publicPath: "/dist" },
+        static: { directory: path.resolve(__dirname) },
+        hot: true,
+    },
 };
