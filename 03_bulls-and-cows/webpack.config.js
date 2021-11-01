@@ -2,7 +2,7 @@ const path = require("path");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = {
-    name: "wordrelay-setting",
+    name: "bulls-and-cows-setting",
     mode: "development",
     devtool: "inline-source-map",
     resolve: {
@@ -35,9 +35,9 @@ module.exports = {
     },
     plugins: [new ReactRefreshWebpackPlugin()],
     output: {
-        path: path.join(__dirname, "dist"), // 실제의 경로
+        path: path.join(__dirname, "dist"),
         filename: "[name].js",
-        publicPath: "/dist", // 웹펙 데브서버가 사용하는 경과물간의  상대 경로 app.use('/dist', express.static(__dirname, 'dist'))
+        publicPath: "/dist",
     },
     devServer: {
         devMiddleware: { publicPath: "/dist" },
